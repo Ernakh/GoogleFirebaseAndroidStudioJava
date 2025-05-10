@@ -8,6 +8,8 @@ import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
@@ -65,17 +67,26 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ViewHold
     }
 
     private void deletarProduto(String idDocumento, int position, View view) {
-        FirebaseFirestore.getInstance().collection("produtos")
-                .document(idDocumento)
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    produtos.remove(position);
-                    notifyItemRemoved(position);
-                    Toast.makeText(view.getContext(), "Produto deletado!", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(view.getContext(), "Erro ao deletar", Toast.LENGTH_SHORT).show();
-                });
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        if (user != null) {
+            String uid = user.getUid(); // se quiser usar
+
+            FirebaseFirestore.getInstance().collection("produtos")
+                    .document(idDocumento)
+                    .delete()
+                    .addOnSuccessListener(aVoid -> {
+                        produtos.remove(position);
+                        notifyItemRemoved(position);
+                        Toast.makeText(view.getContext(), "Produto deletado!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(view.getContext(), "Erro ao deletar", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(view.getContext(), "Você precisa estar logado para realizar essa ação", Toast.LENGTH_SHORT).show();
+        }
     }
 
 
