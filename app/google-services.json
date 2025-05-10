@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369405938279",
+    "project_id": "projeto-aula-db41f",
+    "storage_bucket": "projeto-aula-db41f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369405938279:android:e5d45f8b8775f05b8d62c2",
+        "android_client_info": {
+          "package_name": "com.ernakh.googlefirebaseandroidstudiojava"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC7H88hdWPnJq083sTGr4qO3-1vyivIbeI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
