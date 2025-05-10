@@ -4,8 +4,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.List;
 
@@ -43,7 +46,38 @@ public class ProdutoAdapter extends RecyclerView.Adapter<ProdutoAdapter.ViewHold
                 listener.onItemClick(p);
             }
         });
+
+        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+            private long lastClickTime = 0;
+
+            @Override
+            public boolean onTouch(View v, android.view.MotionEvent event) {
+                if (event.getAction() == android.view.MotionEvent.ACTION_DOWN) {
+                    long currentTime = System.currentTimeMillis();
+                    if (currentTime - lastClickTime < 300) {
+                        deletarProduto(p.getId(), holder.getAdapterPosition(), v);
+                    }
+                    lastClickTime = currentTime;
+                }
+                return false;
+            }
+        });
     }
+
+    private void deletarProduto(String idDocumento, int position, View view) {
+        FirebaseFirestore.getInstance().collection("produtos")
+                .document(idDocumento)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    produtos.remove(position);
+                    notifyItemRemoved(position);
+                    Toast.makeText(view.getContext(), "Produto deletado!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(view.getContext(), "Erro ao deletar", Toast.LENGTH_SHORT).show();
+                });
+    }
+
 
     @Override
     public int getItemCount() {
